@@ -1,0 +1,20 @@
+{
+    "name": "SynthVR.Runtime",
+    "rootNamespace": "Genesis.Synth.VR",
+    "references": [
+        "Synth.Runtime",
+        "Mujoco.Runtime",
+        "meta.xr.mrutilitykit",
+        "Oculus.VR",
+        "Oculus.Interaction.OVR"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

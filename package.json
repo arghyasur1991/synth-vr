@@ -1,0 +1,19 @@
+{
+  "name": "com.genesis.synth.vr",
+  "displayName": "Synth VR",
+  "version": "1.0.0",
+  "description": "Mixed Reality interaction with synth humanoids on Meta Quest. Hand physics, room integration, passthrough.",
+  "dependencies": {
+    "com.genesis.synth": "1.0.0",
+    "org.mujoco": "3.5.0",
+    "com.meta.xr.sdk.interaction.ovr": "85.0.0",
+    "com.meta.xr.mrutilitykit": "85.0.0"
+  },
+  "author": {
+    "name": "Genesis",
+    "url": "https://github.com/arghyasur1991/synth-vr"
+  },
+  "license": "Apache-2.0",
+  "licensesUrl": "https://github.com/arghyasur1991/synth-vr/blob/main/LICENSE",
+  "hideInEditor": false
+}
