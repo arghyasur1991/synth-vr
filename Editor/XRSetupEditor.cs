@@ -15,7 +15,7 @@ namespace Genesis.Sentience.EditorTools
     /// </summary>
     public static class XRSetupEditor
     {
-        [MenuItem("Sentience/Setup/Configure XR for Meta Quest")]
+        [MenuItem("Synth/Setup/Configure XR for Meta Quest")]
         public static void ConfigureXR()
         {
             try

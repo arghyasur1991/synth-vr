@@ -2,12 +2,12 @@
     "name": "SynthVR.Editor",
     "rootNamespace": "Genesis.Synth.VR.Editor",
     "references": [
-        "SynthVR.Runtime",
-        "Synth.Runtime",
-        "Mujoco.Runtime",
-        "Oculus.VR",
-        "meta.xr.mrutilitykit",
-        "Unity.RenderPipelines.Universal.Runtime"
+        "GUID:7b3c308a511ec461fa3e958041d5db65",
+        "GUID:de7617b4a02f749c2a5fcb6b6a713c2c",
+        "GUID:62e270fc6ccbe61c59f510a8e31d067c",
+        "GUID:f64c9ebcd7899c3448a08dc9f9ddbe30",
+        "GUID:f5eda1afa2a1241a59c4db6830e1c890",
+        "GUID:15fc0a57446b3144c949da3e2b9737a9"
     ],
     "includePlatforms": [
         "Editor"

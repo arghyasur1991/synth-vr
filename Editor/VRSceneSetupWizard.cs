@@ -54,7 +54,7 @@ namespace Genesis.Sentience.VR.Editor
 
         // ── Open ────────────────────────────────────────────────────────────────
 
-        [MenuItem("Sentience/Setup/VR Scene Wizard")]
+        [MenuItem("Synth/Setup/VR Scene Wizard")]
         static void Open()
         {
             var w = GetWindow<VRSceneSetupWizard>("VR Scene Setup");

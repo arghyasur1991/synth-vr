@@ -7,7 +7,8 @@
     "com.genesis.synth": "1.0.0",
     "org.mujoco": "3.5.0",
     "com.meta.xr.sdk.interaction.ovr": "85.0.0",
-    "com.meta.xr.mrutilitykit": "85.0.0"
+    "com.meta.xr.mrutilitykit": "85.0.0",
+    "com.unity.render-pipelines.universal": "17.0.0"
   },
   "author": {
     "name": "Genesis",
