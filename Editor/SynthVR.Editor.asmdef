@@ -4,7 +4,10 @@
     "references": [
         "SynthVR.Runtime",
         "Synth.Runtime",
-        "Mujoco.Runtime"
+        "Mujoco.Runtime",
+        "Oculus.VR",
+        "meta.xr.mrutilitykit",
+        "Unity.RenderPipelines.Universal.Runtime"
     ],
     "includePlatforms": [
         "Editor"

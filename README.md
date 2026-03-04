@@ -39,14 +39,48 @@ Add to `Packages/manifest.json`:
 
 Meta XR SDK packages are installed separately via the Unity Package Manager or Meta's setup tools.
 
-## Quick Start
+## Scene Setup
 
-1. Set up your Unity project with Meta XR SDK (Building Blocks, OVR camera rig).
-2. Add a single Synth to your scene (via synth-core). **Note:** only one active Synth per scene is supported.
-3. Add `PlayerHandBodies` to your OVR hand objects for physics interaction.
-4. Add `PlayerLocomotion` to your camera rig for movement.
-5. Add `SceneMeshManager` to your scene for room integration.
-6. Build and deploy to Quest — your Synth is in your physical room.
+Use the built-in wizard to configure a VR scene: **Sentience > Setup > VR Scene Wizard**
+
+### Step 1 — Add Meta Building Blocks
+
+Open **Meta > Tools > Building Blocks** and add these to your scene:
+
+| Block | Purpose |
+|-------|---------|
+| **Camera Rig** | OVRManager + OVRCameraRig with tracking space and hand/eye anchors |
+| **Hand Tracking** (x2) | OVRHand + OVRSkeleton on left and right hand anchors |
+| **Passthrough** | OVRPassthroughLayer for mixed reality passthrough |
+| **OVRInteractionComprehensive** | Ray/grab/poke interactions *(optional)* |
+
+### Step 2 — Run the VR Scene Wizard
+
+The wizard validates Building Blocks, then configures everything else automatically:
+
+- **Conflicting objects** — disables stray MainCamera, Ground/Plane, Haptics, and controller visuals
+- **MuJoCo scene** — creates `MjScene`, `Global Settings` (with `MjGlobalSettings`), and `QuestPerformanceManager`
+- **Synth-VR components** — adds `SceneMeshManager` (room integration) and `PlayerHandBodies` (physics hands, auto-wired to OVR skeletons)
+- **Lighting** — creates a directional light if missing
+- **URP settings** — applies Quest-optimized render pipeline settings (Render Scale 1.0, MSAA 4x, HDR off, Shadow Distance 50, SRP Batcher on)
+- **Permissions** — fixes OculusProjectConfig for hand tracking, passthrough, scene support, and anchor support
+
+Click **Setup Everything** to run all steps at once, or use per-section **Fix** buttons for granular control. All changes support Undo.
+
+### Step 3 — Add Your Synth
+
+Add a single Synth to the scene via synth-core. **Note:** only one active Synth per scene is supported.
+
+### Required Permissions
+
+| Feature | OculusProjectConfig | OpenXR Feature | Android Permission |
+|---------|--------------------|-----------------|--------------------|
+| Hand Tracking | `handTrackingSupport: 1` | Hand Tracking Subsystem | Auto-injected |
+| Passthrough | `insightPassthroughEnabled: 1` | Meta Quest: Camera | `android.permission.CAMERA` (auto) |
+| Room Mesh (MRUK) | `sceneSupport: 1` | Meta Quest: Meshing / Planes | `com.oculus.permission.USE_SCENE` (auto) |
+| Spatial Anchors | `anchorSupport: 1` | Meta Quest: Anchors | `com.oculus.permission.USE_SCENE` (auto) |
+
+The wizard auto-fixes OculusProjectConfig settings. OpenXR features must be enabled manually in **Project Settings > XR Plug-in Management > OpenXR**.
 
 ## Package Structure
 
@@ -56,21 +90,24 @@ synth-vr/
 │   ├── Hands/         PlayerHandBodies (MuJoCo hand tracking)
 │   ├── Locomotion/    PlayerLocomotion (smooth walk/rotate)
 │   ├── SceneSetup/    SceneMeshManager (MRUK room integration)
+│   ├── Performance/   QuestPerformanceManager (CPU/GPU levels)
 │   ├── Lighting/      AmbientLightEstimator
 │   ├── Shaders/       PTRLWithDepth
 │   └── Resources/     InvisibleOccluder, PTRLHighlightsAndShadows materials
 └── Editor/
-    └── XRSetupEditor.cs
+    ├── VRSceneSetupWizard.cs   (interactive scene setup)
+    └── XRSetupEditor.cs        (XR plugin configuration)
 ```
 
 ## Components
 
-| Component | Purpose |
-|-----------|---------|
-| `PlayerHandBodies` | Creates MuJoCo bodies from OVR hand tracking for physics interaction |
-| `PlayerLocomotion` | Smooth walk and rotate via controller thumbstick |
-| `SceneMeshManager` | Sets up room geometry, furniture anchors, and physics colliders from MRUK |
-| `AmbientLightEstimator` | Estimates ambient lighting from passthrough camera for realistic rendering |
+| Component | Purpose | Where |
+|-----------|---------|-------|
+| `PlayerHandBodies` | Creates MuJoCo bodies from OVR hand tracking for physics interaction | OVRCameraRig |
+| `SceneMeshManager` | Sets up room geometry, furniture anchors, and physics colliders from MRUK | SceneMesh object |
+| `QuestPerformanceManager` | Requests CPU/GPU performance levels from Quest OS | Global Settings |
+| `PlayerLocomotion` | Smooth walk and rotate via controller thumbstick | OVRCameraRig |
+| `AmbientLightEstimator` | Estimates ambient lighting from passthrough camera for realistic rendering | Runtime (auto) |
 
 ## Roadmap
 

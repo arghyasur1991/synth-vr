@@ -69,12 +69,6 @@ namespace Genesis.Sentience.VR
         [Header("Passthrough")]
         public bool enablePassthrough = true;
 
-        [Header("Performance")]
-        [Tooltip("Request high CPU/GPU clocks for heavy physics scenes")]
-        public bool boostPerformance = true;
-        public OVRManager.ProcessorPerformanceLevel cpuLevel = OVRManager.ProcessorPerformanceLevel.SustainedHigh;
-        public OVRManager.ProcessorPerformanceLevel gpuLevel = OVRManager.ProcessorPerformanceLevel.SustainedHigh;
-
         [Header("MuJoCo Physics")]
         [Tooltip("Create MuJoCo static bodies from room mesh for physics collisions")]
         public bool createMujocoColliders = true;
@@ -144,7 +138,6 @@ namespace Genesis.Sentience.VR
         {
             _instance = this;
             _loadingStartTime = Time.time;
-            if (boostPerformance) ApplyPerformanceLevels();
             PauseMjScene();
         }
 
@@ -842,14 +835,7 @@ namespace Genesis.Sentience.VR
             geom.Settings.Solver.Margin = 0.001f;
         }
 
-        // ── Performance ──────────────────────────────────────────────────────
-
-        void ApplyPerformanceLevels()
-        {
-            OVRManager.suggestedCpuPerfLevel = cpuLevel;
-            OVRManager.suggestedGpuPerfLevel = gpuLevel;
-            Debug.Log($"[SceneMesh] Performance: CPU={cpuLevel}, GPU={gpuLevel}");
-        }
+        // Performance levels moved to QuestPerformanceManager (on Global Settings object)
 
         // ── Passthrough ──────────────────────────────────────────────────────
 
