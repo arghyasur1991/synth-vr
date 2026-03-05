@@ -10,6 +10,18 @@ Mixed Reality interaction with Synth humanoids on Meta Quest. Physics-based hand
 - **Passthrough Rendering** — Occluder materials for room surfaces, PTRL (Passthrough Receive Light) shader for realistic lighting on the Synth.
 - **Ambient Light Estimation** — Passthrough camera-based lighting estimation for harmonized rendering in mixed reality.
 
+## Ecosystem
+
+synth-vr is part of a three-package architecture for creating, training, and interacting with physics-simulated humanoids:
+
+| Package | Role | |
+|---------|------|-|
+| [**synth-core**](https://github.com/arghyasur1991/synth-core) | Humanoid creation, MuJoCo physics, skill architecture | Required |
+| [**synth-training**](https://github.com/arghyasur1991/synth-training) | On-device reinforcement learning via TorchSharp SAC | Optional |
+| **synth-vr** *(this repo)* | Mixed reality interaction on Meta Quest | — |
+
+synth-core provides the physics body and motor system. synth-vr adds Meta Quest hand tracking, MRUK room integration, and passthrough rendering so the Synth lives in your physical space. Optionally add **synth-training** to enable on-device reinforcement learning — the Synth trains live on Quest while you interact with it.
+
 ## Requirements
 
 - Unity 6000.x or later
@@ -41,7 +53,7 @@ Meta XR SDK packages are installed separately via the Unity Package Manager or M
 
 ## Scene Setup
 
-Use the built-in wizard to configure a VR scene: **Sentience > Setup > VR Scene Wizard**
+Use the built-in wizard to configure a VR scene: **Synth > Setup > VR Scene Wizard**
 
 ### Step 1 — Add Meta Building Blocks
 
