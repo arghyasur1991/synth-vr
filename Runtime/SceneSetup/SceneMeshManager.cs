@@ -329,7 +329,7 @@ namespace Genesis.Sentience.VR
                 return;
             }
 
-            var room = _mruk.Rooms[0];
+            var room = _mruk.GetCurrentRoom() ?? _mruk.Rooms[0];
             var floorAnchor = room.FloorAnchors[0];
 
             // The Synth's root transform is at the pelvis, NOT the feet.
