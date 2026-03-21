@@ -50,7 +50,7 @@ namespace Genesis.Sentience.VR
 
         [Header("Solver")]
         [Tooltip("MuJoCo physics timestep (s). Lower = more accurate but more substeps per FixedUpdate.")]
-        public float solverTimestep = 0.005f;
+        public float solverTimestep = 0.02f;
         [Tooltip("MuJoCo solver iterations per step. Higher = more accurate contacts but slower.")]
         public int solverIterations = 20;
 
