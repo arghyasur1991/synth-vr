@@ -314,7 +314,9 @@ namespace Genesis.Sentience.VR
             scene.SyncUnityToMjState();
 
             scene.PauseSimulation = false;
-            Debug.Log("[SceneMesh] MjScene UNPAUSED (qpos forced, qvel zeroed).");
+            Debug.Log($"[SceneMesh] MjScene UNPAUSED (qpos forced, qvel zeroed). " +
+                $"fixedDt={Time.fixedDeltaTime:F6}, opt.timestep={scene.Model->opt.timestep:F6}, " +
+                $"subSteps={scene.SubStepsPerFixedUpdate}");
         }
 
         static void UnpauseMjScene()
