@@ -116,14 +116,21 @@ namespace Genesis.Sentience.VR
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         static void OnAfterSceneLoad()
         {
+            // Always pause MjScene during startup to prevent FixedUpdate time
+            // accumulation from causing a burst of physics steps on the first frames.
+            if (Mujoco.MjScene.InstanceExists)
+                Mujoco.MjScene.Instance.PauseSimulation = true;
+
             AutoBootstrap();
 
             // Only hijack synth spawn if an active SceneMeshManager will manage it.
-            // Otherwise let the synth stay at its scene-authored position.
+            // Otherwise let the synth stay at its scene-authored position and
+            // schedule a deferred unpause with velocity zeroing.
             var manager = Object.FindAnyObjectByType<SceneMeshManager>(FindObjectsInactive.Exclude);
             if (manager == null)
             {
                 Debug.Log("[SceneMesh] No active SceneMeshManager — synth stays at start location.");
+                ScheduleDeferredUnpause();
                 return;
             }
 
@@ -136,9 +143,13 @@ namespace Genesis.Sentience.VR
                 _synthGO.SetActive(false);
                 Debug.Log("[SceneMesh] Synth disabled — will spawn after room loads.");
             }
+        }
 
-            if (Mujoco.MjScene.InstanceExists)
-                Mujoco.MjScene.Instance.PauseSimulation = true;
+        static void ScheduleDeferredUnpause()
+        {
+            var go = new GameObject("[MjDeferredUnpause]");
+            go.hideFlags = HideFlags.HideAndDontSave;
+            go.AddComponent<MjDeferredUnpause>();
         }
 
         // ── Lifecycle ────────────────────────────────────────────────────────
@@ -1100,4 +1111,35 @@ namespace Genesis.Sentience.VR
         }
     }
 
+    /// <summary>
+    /// Waits a couple of frames for MjScene to fully initialize, zeros all
+    /// velocities, then unpauses. Used when no SceneMeshManager is active
+    /// so MjScene doesn't run a burst of accumulated FixedUpdates on startup.
+    /// </summary>
+    internal class MjDeferredUnpause : MonoBehaviour
+    {
+        unsafe IEnumerator Start()
+        {
+            yield return null;
+            yield return null;
+
+            if (Mujoco.MjScene.InstanceExists)
+            {
+                var scene = Mujoco.MjScene.Instance;
+                if (scene.Model != null && scene.Data != null)
+                {
+                    int nv = (int)scene.Model->nv;
+                    for (int i = 0; i < nv; i++)
+                        scene.Data->qvel[i] = 0;
+
+                    Mujoco.MujocoLib.mj_forward(scene.Model, scene.Data);
+                    scene.SyncUnityToMjState();
+                }
+                scene.PauseSimulation = false;
+                Debug.Log("[SceneMesh] MjScene UNPAUSED (deferred, velocities zeroed).");
+            }
+
+            Destroy(gameObject);
+        }
+    }
 }
