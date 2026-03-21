@@ -118,8 +118,8 @@ namespace Genesis.Sentience.VR
         {
             // Always pause MjScene during startup to prevent FixedUpdate time
             // accumulation from causing a burst of physics steps on the first frames.
-            // if (Mujoco.MjScene.InstanceExists)
-            //     Mujoco.MjScene.Instance.PauseSimulation = true;
+            if (Mujoco.MjScene.InstanceExists)
+                Mujoco.MjScene.Instance.PauseSimulation = true;
 
             AutoBootstrap();
 
@@ -130,7 +130,7 @@ namespace Genesis.Sentience.VR
             if (manager == null)
             {
                 Debug.Log("[SceneMesh] No active SceneMeshManager — synth stays at start location.");
-                // ScheduleDeferredUnpause();
+                ScheduleDeferredUnpause();
                 return;
             }
 
@@ -325,9 +325,7 @@ namespace Genesis.Sentience.VR
             scene.SyncUnityToMjState();
 
             scene.PauseSimulation = false;
-            Debug.Log($"[SceneMesh] MjScene UNPAUSED (qpos forced, qvel zeroed). " +
-                $"fixedDt={Time.fixedDeltaTime:F6}, opt.timestep={scene.Model->opt.timestep:F6}, " +
-                $"subSteps={scene.SubStepsPerFixedUpdate}");
+            Debug.Log("[SceneMesh] MjScene UNPAUSED (qpos forced, qvel zeroed).");
         }
 
         static void UnpauseMjScene()
@@ -1120,7 +1118,7 @@ namespace Genesis.Sentience.VR
     /// </summary>
     internal class MjDeferredUnpause : MonoBehaviour
     {
-        private int _framesToWait = 100;
+        private int _framesToWait = 2;
 
         void Update()
         {
@@ -1145,10 +1143,7 @@ namespace Genesis.Sentience.VR
                 scene.SyncUnityToMjState();
             }
             scene.PauseSimulation = false;
-            double ts = scene.Model != null ? scene.Model->opt.timestep : -1;
-            Debug.Log($"[SceneMesh] MjScene UNPAUSED (deferred, velocities zeroed). " +
-                $"fixedDt={Time.fixedDeltaTime:F6}, opt.timestep={ts:F6}, " +
-                $"subSteps={scene.SubStepsPerFixedUpdate}");
+            Debug.Log("[SceneMesh] MjScene UNPAUSED (deferred, velocities zeroed).");
         }
     }
 }
