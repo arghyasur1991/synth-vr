@@ -116,6 +116,17 @@ namespace Genesis.Sentience.VR
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         static void OnAfterSceneLoad()
         {
+            AutoBootstrap();
+
+            // Only hijack synth spawn if an active SceneMeshManager will manage it.
+            // Otherwise let the synth stay at its scene-authored position.
+            var manager = Object.FindAnyObjectByType<SceneMeshManager>(FindObjectsInactive.Exclude);
+            if (manager == null)
+            {
+                Debug.Log("[SceneMesh] No active SceneMeshManager — synth stays at start location.");
+                return;
+            }
+
             var synth = Object.FindAnyObjectByType<Genesis.Sentience.Synth.SynthEntity>(FindObjectsInactive.Exclude);
             if (synth != null)
             {
@@ -128,8 +139,6 @@ namespace Genesis.Sentience.VR
 
             if (Mujoco.MjScene.InstanceExists)
                 Mujoco.MjScene.Instance.PauseSimulation = true;
-
-            AutoBootstrap();
         }
 
         // ── Lifecycle ────────────────────────────────────────────────────────
