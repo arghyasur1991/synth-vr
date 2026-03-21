@@ -981,7 +981,7 @@ namespace Genesis.Sentience.VR
 
         static void AutoBootstrap()
         {
-            if (Object.FindAnyObjectByType<SceneMeshManager>() != null) return;
+            if (Object.FindAnyObjectByType<SceneMeshManager>(FindObjectsInactive.Include) != null) return;
             var go = new GameObject("[SceneMeshManager]");
             go.AddComponent<SceneMeshManager>();
             Debug.Log("[SceneMesh] Auto-created SceneMeshManager.");
