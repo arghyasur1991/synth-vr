@@ -1118,32 +1118,28 @@ namespace Genesis.Sentience.VR
     /// </summary>
     internal class MjDeferredUnpause : MonoBehaviour
     {
-        private int _framesToWait = 2;
-
-        void Update()
+        unsafe IEnumerator Start()
         {
-            if (_framesToWait-- > 0) return;
+            yield return null;
+            yield return null;
 
-            StabilizeAndUnpause();
-            Destroy(gameObject);
-        }
-
-        private static unsafe void StabilizeAndUnpause()
-        {
-            if (!Mujoco.MjScene.InstanceExists) return;
-
-            var scene = Mujoco.MjScene.Instance;
-            if (scene.Model != null && scene.Data != null)
+            if (Mujoco.MjScene.InstanceExists)
             {
-                int nv = (int)scene.Model->nv;
-                for (int i = 0; i < nv; i++)
-                    scene.Data->qvel[i] = 0;
+                var scene = Mujoco.MjScene.Instance;
+                if (scene.Model != null && scene.Data != null)
+                {
+                    int nv = (int)scene.Model->nv;
+                    for (int i = 0; i < nv; i++)
+                        scene.Data->qvel[i] = 0;
 
-                Mujoco.MujocoLib.mj_forward(scene.Model, scene.Data);
-                scene.SyncUnityToMjState();
+                    Mujoco.MujocoLib.mj_forward(scene.Model, scene.Data);
+                    scene.SyncUnityToMjState();
+                }
+                scene.PauseSimulation = false;
+                Debug.Log("[SceneMesh] MjScene UNPAUSED (deferred, velocities zeroed).");
             }
-            scene.PauseSimulation = false;
-            Debug.Log("[SceneMesh] MjScene UNPAUSED (deferred, velocities zeroed).");
+
+            Destroy(gameObject);
         }
     }
 }
